@@ -17,57 +17,57 @@ input_len:
 .globl _start
 
 ask_for_input:
-    movl $sys_write, %eax
-    movl $1, %ebx
-    movl $input_msg, %ecx
-    movl $15, %edx
+    mov $sys_write, %eax
+    mov $1, %ebx
+    mov $input_msg, %ecx
+    mov $15, %edx
     int $0x80
     ret
 
 read_input:
-    movl $sys_read, %eax
-    movl $0, %ebx
-    movl $text, %ecx
-    movl $256, %edx
+    mov $sys_read, %eax
+    mov $0, %ebx
+    mov $text, %ecx
+    mov $256, %edx
     int $0x80
-    movl %eax, input_len
-    subl $1, input_len  
+    mov %eax, input_len
+    dec input_len  
     ret
 
 reverse_text:
-    movl input_len, %ecx
+    mov input_len, %ecx
     lea text, %esi
     lea text, %edi
     add %ecx, %edi
     dec %edi
-    cld
-    shr %ecx
-    jz end_reverse
+    mov %ecx, %eax
+    xor %edx, %edx
+    mov $2, %ecx
+    div %ecx
+    mov %eax, %ecx
 
-loop:
-    movb (%esi), %al
-    movb (%edi), %bl
-    movb %al, (%edi)
-    movb %bl, (%esi)
+pntl:
+    mov (%esi), %al
+    mov (%edi), %bl
+    mov %al, (%edi)
+    mov %bl, (%esi)
     inc %esi
     dec %edi
     dec %ecx
-    jnz loop
-
-end_reverse:
+    jnz pntl 
     ret
 
 write_output:
-    movl $sys_write, %eax
-    movl $1, %ebx
-    movl $text, %ecx
-    movl input_len, %edx
+    mov $sys_write, %eax
+    mov $1, %ebx
+    mov $text, %ecx
+    mov input_len, %edx
     int $0x80
     ret
 
 exit_the_program:
-    movl $sys_exit, %eax
-    movl $0, %ebx
+    mov $sys_exit, %eax
+    mov $0, %ebx
     int $0x80
 
 _start:
