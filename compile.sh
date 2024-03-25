@@ -1,5 +1,7 @@
 #!/bin/bash
-
-as --32 -g 001.asm -o 001.o
-ld -m elf_i386 -o 001 001.o
-./001
+for file in *.asm
+do
+    base=${file%.asm}
+    as --32 -g $file -o $base.o
+    ld -m elf_i386 -o $base.elf $base.o
+done
