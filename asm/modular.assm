@@ -1,0 +1,82 @@
+.section .data
+    liczba: .int 666      # Liczba dziesiętna
+    maska:  .int 0xF      # Maska do wyodrębnienia 4 bitów
+    wynik:  .ascii "00000000"  # Bufor wynikowy ???
+
+.section .text
+
+.globl _start
+dfanffn
+_start:
+    movl $liczba, %eax    # Wczytanie liczby do rejestru
+    movl $8, %ebx         # Licznik iteracji
+
+/* 
+
+1. Maska na liczbe (pozostaja 4 ostatnie bity)
+2. Zapis tych 4 bitów (liczby) jako odpowiadającego ascii do wyniku
+3. Przesuniecie bitowe o 4
+1. Maska na liczbe (pozostaja 4 ostatnie bity)
+2. Zapis tych 4 bitów (liczby) jako odpowiadającego ascii do wyniku
+3. Przesuniecie bitowe o 4
+1. Maska na liczbe (pozostaja 4 ostatnie bity)
+2. Zapis tych 4 bitów (liczby) jako odpowiadającego ascii do wyniku
+3. Przesuniecie bitowe o 4
+1. Maska na liczbe (pozostaja 4 ostatnie bity)
+2. Zapis tych 4 bitów (liczby) jako odpowiadającego ascii do wyniku
+3. Przesuniecie bitowe o 4
+
+Wypisanie zawartosci wyniku
+*/
+petla iterator i = 0 ; i<= 8 {
+    klonujemy liczbe liczba -> klona
+    klon przesuniecie o 4 * i
+    1111 1111 1111 1111 1111 1111 1111 0000 <-maskujemy
+    jeżeli klon >=10
+        wypisz klon - 10 + 'A'
+    <10
+     wypisz klon + '0'
+}
+
+/*
+
+liczba x (typ int) zapisuje sie w postaci binarnej
+
+for y : x ( petla po co 4 bity )
+    zapisz y =  w
+    (zamien y na hex)
+    wypisz W 
+    
+funkcja zamien y na hex :
+    jezeli < 10
+        w = w + '0'
+    jezeli >= 10
+        w = w + 'A'
+
+*/
+
+.section .text
+.globl _start
+
+_start:
+    # Inicjalizacja wartości i (int i = 0)
+    movl $0, %ebx        # i = 0
+
+loop_start:
+    # Warunek sprawdzający (i <= 8)
+    cmpl $8, %ebx        # Porównanie i z 8
+    jg loop_end          # Jeśli i jest większe niż 8, zakończ pętlę
+
+    # Ciało pętli
+
+    # Inkrementacja wartości i (i++)
+    incl %ebx            # i++
+
+    # Powrót na początek pętli
+    jmp loop_start
+
+loop_end:
+    # Koniec programu
+    mov $60, %rax        # syscall number for exit
+    xor %rdi, %rdi      # exit status 0
+    syscall
